@@ -5,6 +5,9 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const {ObjectID} = require('mongodb')
 
+const {mongoose} = require('./db/mongoose')
+let {Voter} = require('./models/voter')
+
 let app = express()
 const port = process.env.PORT
 
