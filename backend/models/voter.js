@@ -9,7 +9,7 @@ let VoterSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    maxlength: 13
+    length: 13
   },
   name: {
     type: String,
@@ -38,7 +38,7 @@ let VoterSchema = new mongoose.Schema({
   telephone: {
     type: String,
     required: true,
-    maxlength: 10
+    length: 10
   },
   email: {
     type: String,
