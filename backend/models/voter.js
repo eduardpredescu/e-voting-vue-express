@@ -82,7 +82,7 @@ VoterSchema.methods.toJSON = function () {
   let voter = this
   let voterObject = voter.toObject()
 
-  return _.pick(voterObject, ['_id', 'email'])
+  return _.pick(voterObject, ['_id', 'email', 'name', 'surname', 'city', 'county'])
 }
 
 VoterSchema.methods.generateAuthToken = function () {

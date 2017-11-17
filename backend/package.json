@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon",
     "lint": "eslint --ext .js db middleware models tests index.js",
-    "test": "npm run lint && export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
+    "test": "npm run lint && export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha tests/**/*.test.js",
+    "unit": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha tests/**/*.test.js",
     "test-watch": "nodemon --exec 'npm lint && npm test'",
     "debug": "DEBUG=express:* node index.js"
   },
