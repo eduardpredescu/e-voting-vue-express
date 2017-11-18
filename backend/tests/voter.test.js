@@ -213,3 +213,20 @@ describe('GET /voters/me', () => {
       .end(done)
   })
 })
+
+describe('DELETE /voters/me/token', () => {
+  it('should remove auth token on logout', (done) => {
+    request(app)
+      .delete('/voters/me/token')
+      .set('x-auth', voters[0].tokens[0].token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        Voter.findById(voters[0]._id).then((voter) => {
+          expect(voter.tokens.length).toBe(0);
+          done()
+        }).catch((e) => done(e))
+      })
+  })
+})

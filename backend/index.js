@@ -47,6 +47,14 @@ app.get('/voters/me', authenticate, (req, res) => {
   res.send(req.voter)
 })
 
+app.delete('/voters/me/token', authenticate, (req, res) => {
+  req.voter.removeToken(req.token).then(() => {
+    res.status(200).send()
+  }, () => {
+    res.status(400).send()
+  })
+})
+
 app.listen(port, () => {
   console.log(`Started up at port ${port}`)
 })
