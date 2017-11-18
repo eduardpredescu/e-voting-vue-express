@@ -16,8 +16,10 @@ app.use(cors())
 
 app.post('/voters', (req, res) => {
   let voter = new Voter(req.body)
-  if (new Date(voter.doe) <= new Date()) res.status(400).send({message: 'Expired ID'})
-  if (new Date(new Date().getTime() - voter.dob).getUTCFullYear() - 1970 < 18) res.status(400).send({message: 'Voter too young'})
+  if (new Date(voter.doe) <= new Date()) return res.status(400).send({message: 'Expired ID'})
+  if (new Date(new Date().getTime() - voter.dob).getUTCFullYear() - 1970 < 18) return res.status(400).send({message: 'Voter too young'})
+
+
   voter.save().then((voter) => {
     return voter.generateAuthToken()
   }).then((token) => {
