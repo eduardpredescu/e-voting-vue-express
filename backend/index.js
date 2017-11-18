@@ -1,4 +1,5 @@
 require('./config/config.js')
+const _ = require('lodash')
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -24,6 +25,18 @@ app.post('/voters', (req, res) => {
     return voter.generateAuthToken()
   }).then((token) => {
     res.header('x-auth', token).send(voter)
+  }).catch((e) => {
+    res.status(400).send(e)
+  })
+})
+
+app.post('/voters/login', (req, res) => {
+  let body = _.pick(req.body, ['email', 'password'])
+
+  Voter.findByCredentials(body.email, body.password).then((voter) => {
+    return voter.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(voter)
+    })
   }).catch((e) => {
     res.status(400).send(e)
   })

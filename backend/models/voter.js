@@ -110,6 +110,38 @@ VoterSchema.methods.removeToken = function (token) {
   })
 }
 
+VoterSchema.statics.findByToken = function (token) {
+  let Voter = this
+  let decoded
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET)
+  } catch (e) {
+    return Promise.reject()
+  }
+
+  return Voter.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  })
+}
+
+VoterSchema.statics.findByCredentials = function (email, password) {
+  let Voter = this
+
+  return Voter.findOne({email}).then((voter) => {
+    if(!voter) return Promise.reject()
+
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, voter.password, (err, res) => {
+        if (res) resolve(voter)
+        else reject()
+      })
+    })
+  })
+}
+
 VoterSchema.pre('save', function (next) {
   let voter = this
 

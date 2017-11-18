@@ -152,3 +152,40 @@ describe('POST /voters', () => {
     .end(done)
   })
 })
+
+describe('POST /voters/login', () => {
+  it('should authenticate an user', (done) => {
+    request(app)
+      .post('/voters/login')
+      .send({
+        email: voters[1].email,
+        password: voters[1].password
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toBeTruthy()
+      })
+      .end((err, res) => {
+        if (err) return done(err)
+
+        Voter.findById(voters[1]._id).then((voter) => {
+          expect(voter.toObject().tokens[1]).toMatchObject({
+            access: 'auth',
+            token: res.headers['x-auth']
+          })
+          done()
+        }).catch((e) => done(e))
+      })
+  })
+
+  it('should reject an invalid user', (done) => {
+    request(app)
+    .post('/voters/login')
+    .send({
+      email: voters[1].email,
+      password: voters[1].password + '1'
+    })
+    .expect(400)
+    .end(done)
+  })
+})
