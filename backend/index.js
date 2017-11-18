@@ -7,6 +7,7 @@ const cors = require('cors')
 const {ObjectID} = require('mongodb')
 
 require('./db/mongoose')
+const {authenticate} = require('./middleware/authenticate')
 let {Voter} = require('./models/voter')
 
 let app = express()
@@ -40,6 +41,10 @@ app.post('/voters/login', (req, res) => {
   }).catch((e) => {
     res.status(400).send(e)
   })
+})
+
+app.get('/voters/me', authenticate, (req, res) => {
+  res.send(req.voter)
 })
 
 app.listen(port, () => {

@@ -189,3 +189,27 @@ describe('POST /voters/login', () => {
     .end(done)
   })
 })
+
+describe('GET /voters/me', () => {
+  it('should return voter if authenticated', (done) => {
+    request(app)
+      .get('/voters/me')
+      .set('x-auth', voters[1].tokens[0].token)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body._id).toBe(voters[1]._id.toHexString())
+        expect(res.body.email).toBe(voters[1].email)
+      })
+      .end(done)
+  })
+
+  it('should return 401 if not authenticated', (done) => {
+    request(app)
+      .get('/voters/me')
+      .expect(401)
+      .expect((res) => {
+        expect(res.body).toEqual({})
+      })
+      .end(done)
+  })
+})

@@ -122,6 +122,7 @@ VoterSchema.statics.findByToken = function (token) {
 
   return Voter.findOne({
     '_id': decoded._id,
+    'email': decoded.email,
     'tokens.token': token,
     'tokens.access': 'auth'
   })
