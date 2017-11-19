@@ -1,13 +1,13 @@
-const {Voter} = require('./../models/voter');
-// const {Admin}
+const {Voter} = require('./../models/voter')
+const {Admin} = require('./../models/admin')
 
 const authenticate = (req, res, next) => {
-  let token = req.header('x-auth');
+  let token = req.header('x-auth')
 
-    Voter.findByToken(token).then((voter) => {
-      if (!voter) return Promise.reject()
+  Voter.findByToken(token).then((item) => {
+    if (!item) return Promise.reject()
 
-      req.voter = voter
+      req.voter = item
       req.token = token
       next()
     }).catch((e) => {
