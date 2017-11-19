@@ -8,9 +8,10 @@ const {ObjectID} = require('mongodb')
 
 require('./db/mongoose')
 const {authenticate} = require('./middleware/authenticate')
-let {Voter} = require('./models/voter')
+const {Voter} = require('./models/voter')
+const {Event} = require('./models/event')
 
-let app = express()
+const app = express()
 const port = process.env.PORT
 
 app.use(bodyParser.json())
@@ -52,6 +53,14 @@ app.delete('/voters/me/token', authenticate, (req, res) => {
     res.status(200).send()
   }, () => {
     res.status(400).send()
+  })
+})
+
+app.get('/events', authenticate, (req, res) => {
+  Event.find().then((events) => {
+    res.send({events})
+  }).catch((e) => {
+    res.status(400).send(e)
   })
 })
 

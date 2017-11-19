@@ -1,7 +1,7 @@
-var {Voter} = require('./../models/voter');
+const {Voter} = require('./../models/voter');
+// const {Admin}
 
-
-var authenticate = (req, res, next) => {
+const authenticate = (req, res, next) => {
   let token = req.header('x-auth');
 
     Voter.findByToken(token).then((voter) => {
