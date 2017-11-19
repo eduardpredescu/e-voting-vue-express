@@ -11,7 +11,15 @@ const authenticate = (req, res, next) => {
       req.token = token
       next()
     }).catch((e) => {
-      res.status(401).send()
+      Admin.findByToken(token).then((item) => {
+        if (!item) return Promise.reject()
+
+        req.admin = item
+        req.token = token
+        next()
+      }).catch((e) => {
+        res.status(401).send(e)
+      })
     })
 }
 
