@@ -6,16 +6,16 @@ const {app} = require('./../index')
 const {Event} = require('./../models/event')
 
 const {events, populateEvents} = require('./seed/eventSeed')
-const {voters, populateVoters} = require('./seed/voterSeed')
+const {users, populateUsers} = require('./seed/userSeed')
 
-beforeEach(populateVoters)
+beforeEach(populateUsers)
 beforeEach(populateEvents)
 
 describe('GET /events', () => {
   it('should get all events', (done) => {
     request(app)
     .get('/events')
-    .set('x-auth', voters[0].tokens[0].token)
+    .set('x-auth', users[0].tokens[0].token)
     .expect(200)
     .expect((res) => {
       expect(res.body.events.length).toBe(2)

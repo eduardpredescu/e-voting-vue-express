@@ -11,4 +11,4 @@ let Event = mongoose.model('Event', new mongoose.Schema({
   }
 }))
 
-module.exports = {Event};
+module.exports = {Event}

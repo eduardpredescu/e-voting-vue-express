@@ -4,10 +4,14 @@ const {ObjectID} = require('mongodb')
 
 const {app} = require('./../index')
 const {Voter} = require('./../models/voter')
+const {User} = require('./../models/user')
 
 const {voters, populateVoters} = require('./seed/voterSeed')
+const {users, populateUsers} = require('./seed/userSeed')
+
 
 beforeEach(populateVoters)
+beforeEach(populateUsers)
 
 describe('POST /voters', () => {
   it('should create a new voter', (done) => {
@@ -21,6 +25,7 @@ describe('POST /voters', () => {
       'county': 'DJ',
       'telephone': '0764323213',
       'email': 'anghel@ceva.com',
+      'username': 'anghel123',
       'password': '1234567'
     }
 
@@ -31,18 +36,17 @@ describe('POST /voters', () => {
       .expect((res) => {
         expect(res.headers['x-auth']).toBeTruthy()
         expect(res.body._id).toBeTruthy()
-        expect(res.body.email).toBe('anghel@ceva.com')
-        expect(res.body.name).toBe('Anghel')
-        expect(res.body.surname).toBe('Toma')
-        expect(res.body.city).toBe('Craiova')
-        expect(res.body.county).toBe('DJ')
+        expect(res.body.is_admin).toBeFalsy()
       })
       .end((err, res) => {
         if (err) return done(err)
         Voter.findOne({pnc: voter.pnc}).then((voter) => {
           expect(voter).toBeTruthy()
-          expect(voter.password).not.toBe('1234567')
-          done()
+          User.findOne({_id: voter._user.toHexString()}).then((user) => {
+            expect(user).toBeTruthy()
+            expect(user.password).not.toBe('1234567')
+            done()
+          }).catch((e) => done(e))
         }).catch((e) => done(e))
       })
   })
@@ -121,6 +125,7 @@ describe('POST /voters', () => {
       'county': 'DJ',
       'telephone': '0764323213',
       'email': 'ionel@gmail.com',
+      'username': 'ceva',
       'password': '1234567'
     }
 
@@ -142,6 +147,29 @@ describe('POST /voters', () => {
       'county': 'DJ',
       'telephone': '0764323213',
       'email': 'anghel@ceva.com',
+      'username': 'ceva',
+      'password': '1234567'
+    }
+
+    request(app)
+    .post('/voters')
+    .send(voter)
+    .expect(400)
+    .end(done)
+  })
+
+  it('should not create a voter if username exists', (done) => {
+    let voter = {
+      'pnc': '1990911151223',
+      'name': 'Anghel',
+      'surname': 'Toma',
+      'dob': 808099200000,
+      'doe': 1597104000000,
+      'city': 'Craiova',
+      'county': 'DJ',
+      'telephone': '0764323213',
+      'email': 'anghel@ceva.com',
+      'username': 'userOne',
       'password': '1234567'
     }
 
@@ -158,8 +186,8 @@ describe('POST /voters/login', () => {
     request(app)
       .post('/voters/login')
       .send({
-        email: voters[1].email,
-        password: voters[1].password
+        username: users[1].username,
+        password: users[1].password
       })
       .expect(200)
       .expect((res) => {
@@ -168,8 +196,8 @@ describe('POST /voters/login', () => {
       .end((err, res) => {
         if (err) return done(err)
 
-        Voter.findById(voters[1]._id).then((voter) => {
-          expect(voter.toObject().tokens[1]).toMatchObject({
+        User.findById(users[1]._id).then((user) => {
+          expect(user.toObject().tokens[1]).toMatchObject({
             access: 'auth',
             token: res.headers['x-auth']
           })
@@ -182,8 +210,8 @@ describe('POST /voters/login', () => {
     request(app)
     .post('/voters/login')
     .send({
-      email: voters[1].email,
-      password: voters[1].password + '1'
+      username: users[1].username,
+      password: users[1].password + '1'
     })
     .expect(400)
     .end(done)
@@ -194,7 +222,7 @@ describe('GET /voters/me', () => {
   it('should return voter if authenticated', (done) => {
     request(app)
       .get('/voters/me')
-      .set('x-auth', voters[1].tokens[0].token)
+      .set('x-auth', users[1].tokens[0].token)
       .expect(200)
       .expect((res) => {
         expect(res.body._id).toBe(voters[1]._id.toHexString())
@@ -218,13 +246,13 @@ describe('DELETE /voters/me/token', () => {
   it('should remove auth token on logout', (done) => {
     request(app)
       .delete('/voters/me/token')
-      .set('x-auth', voters[0].tokens[0].token)
+      .set('x-auth', users[0].tokens[0].token)
       .expect(200)
       .end((err, res) => {
         if (err) return done(err)
 
-        Voter.findById(voters[0]._id).then((voter) => {
-          expect(voter.tokens.length).toBe(0);
+        User.findById(users[0]._id).then((user) => {
+          expect(user.tokens.length).toBe(0);
           done()
         }).catch((e) => done(e))
       })

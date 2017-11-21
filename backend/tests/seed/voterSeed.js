@@ -1,7 +1,8 @@
 const {ObjectID} = require('mongodb')
-const jwt = require('jsonwebtoken')
 
 const {Voter} = require('./../../models/voter')
+
+const {users} = require('./userSeed.js')
 
 const voterOneId = new ObjectID()
 const voterOneEmail = 'ionel@gmail.com'
@@ -20,10 +21,7 @@ const voters = [{
   telephone: '0764323445',
   email: voterOneEmail,
   password: '1234567',
-  tokens: [{
-    access: 'auth',
-    token: jwt.sign({_id: voterOneId, email: voterOneEmail}, process.env.JWT_SECRET).toString()
-  }]
+  _user: users[0]._id
 }, {
   _id: voterTwoId,
   pnc: '1950811151223',
@@ -36,10 +34,7 @@ const voters = [{
   telephone: '0764323225',
   email: voterTwoEmail,
   password: '1234567',
-  tokens: [{
-    access: 'auth',
-    token: jwt.sign({_id: voterTwoId, email: voterTwoEmail}, process.env.JWT_SECRET).toString()
-  }]
+  _user: users[1]._id
 }]
 
 const populateVoters = (done) => {

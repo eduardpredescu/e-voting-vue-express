@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb')
 
 require('./db/mongoose')
 const {authenticate} = require('./middleware/authenticate')
+const {User} = require('./models/user')
 const {Voter} = require('./models/voter')
 const {Event} = require('./models/event')
 
@@ -18,26 +19,32 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.post('/voters', (req, res) => {
-  let voter = new Voter(req.body)
+  let body = _.pick(req.body, ['pnc', 'name', 'surname', 'dob', 'doe', 'city', 'county', 'telephone', 'email'])
+  let userBody = _.pick(req.body, ['username', 'password'])
+  let user = new User(userBody)
+  let voter = new Voter(_.merge(body, {_user: user._id}))
   if (new Date(voter.doe) <= new Date()) return res.status(400).send({message: 'Expired ID'})
   if (new Date(new Date().getTime() - voter.dob).getUTCFullYear() - 1970 < 18) return res.status(400).send({message: 'Voter too young'})
 
-
-  voter.save().then((voter) => {
-    return voter.generateAuthToken()
+  user.save().then((user) => {
+    return user.generateAuthToken()
   }).then((token) => {
-    res.header('x-auth', token).send(voter)
+    voter.save().then((voter) => {
+      res.header('x-auth', token).send(user)
+    }).catch((e) => {
+      res.status(400).send(e)
+    })
   }).catch((e) => {
     res.status(400).send(e)
   })
 })
 
 app.post('/voters/login', (req, res) => {
-  let body = _.pick(req.body, ['email', 'password'])
+  let body = _.pick(req.body, ['username', 'password'])
 
-  Voter.findByCredentials(body.email, body.password).then((voter) => {
-    return voter.generateAuthToken().then((token) => {
-      res.header('x-auth', token).send(voter)
+  User.findByCredentials(body.username, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user)
     })
   }).catch((e) => {
     res.status(400).send(e)
@@ -45,11 +52,16 @@ app.post('/voters/login', (req, res) => {
 })
 
 app.get('/voters/me', authenticate, (req, res) => {
-  res.send(req.voter)
+  Voter.findOne({_user: req.user._id}).then((voter) => {
+    res.send(voter)
+  }).catch((e) => {
+    res.status(404).send(e)
+  })
+
 })
 
 app.delete('/voters/me/token', authenticate, (req, res) => {
-  req.voter.removeToken(req.token).then(() => {
+  req.user.removeToken(req.token).then(() => {
     res.status(200).send()
   }, () => {
     res.status(400).send()
