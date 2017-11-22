@@ -23,3 +23,51 @@ describe('GET /events', () => {
     .end(done)
   })
 })
+
+describe('POST /events', () => {
+  it('should create a new event', (done) => {
+    let testEvent = {
+      name: 'event',
+      due_date: 1511382048
+    }
+    request(app)
+      .post('/events')
+      .set('x-auth', users[0].tokens[0].token)
+      .send(testEvent)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.name).toBe(testEvent.name)
+        expect(res.body.due_date).toBe(testEvent.due_date)
+      })
+      .end((err, res) => {
+        if (err) return done(err)
+
+        Event.find({name: 'event'}).then((items) => {
+          expect(items.length).toBe(1)
+          expect(items[0].name).toBe('event')
+          expect(items[0].due_date).toBe(1511382048)
+          done()
+        }).catch((e) => done(e))
+      })
+  })
+
+  it('should reject an user that is not an admin', (done) => {
+    request(app)
+      .post('/events')
+      .set('x-auth', users[1].tokens[0].token)
+      .send(events[0])
+      .expect(401)
+      .end(done)
+  })
+
+  it('should reject an invalid event', (done) => {
+    request(app)
+      .post('/events')
+      .set('x-auth', users[0].tokens[0].token)
+      .send({
+        name: 'ceva'
+      })
+      .expect(400)
+      .end(done)
+  })
+})

@@ -76,6 +76,15 @@ app.get('/events', authenticate, (req, res) => {
   })
 })
 
+app.post('/events', authenticate, (req, res) => {
+  if (!req.user.is_admin) return res.status(401).send()
+  let eventBody = new Event(req.body)
+
+  eventBody.save().then((item) => {
+    res.send(item)
+  }).catch((e) => {res.status(400).send(e)})
+})
+
 app.listen(port, () => {
   console.log(`Started up at port ${port}`)
 })
