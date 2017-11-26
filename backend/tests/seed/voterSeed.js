@@ -2,7 +2,8 @@ const {ObjectID} = require('mongodb')
 
 const {Voter} = require('./../../models/voter')
 
-const {users} = require('./userSeed.js')
+const {users} = require('./userSeed')
+const {events} = require('./eventSeed')
 
 const voterOneId = new ObjectID()
 const voterOneEmail = 'ionel@gmail.com'
@@ -21,6 +22,7 @@ const voters = [{
   telephone: '0764323445',
   email: voterOneEmail,
   password: '1234567',
+  events: [],
   _user: users[0]._id
 }, {
   _id: voterTwoId,
@@ -29,11 +31,15 @@ const voters = [{
   surname: 'Marian',
   dob: 808099200000,
   doe: 1597104000000,
-  city: 'Craiova',
-  county: 'DJ',
+  city: 'Targoviste',
+  county: 'DB',
   telephone: '0764323225',
   email: voterTwoEmail,
   password: '1234567',
+  events: [{
+    _event: events[0]._id,
+    _option: events[0].options[0]._id
+  }],
   _user: users[1]._id
 }]
 

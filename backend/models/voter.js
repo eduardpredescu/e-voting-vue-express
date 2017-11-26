@@ -56,7 +56,7 @@ let VoterSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       required: true
     },
-    option: {
+    _option: {
       type: mongoose.Schema.Types.ObjectId,
       required: true
     }

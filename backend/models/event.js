@@ -10,6 +10,10 @@ let Event = mongoose.model('Event', new mongoose.Schema({
     required: true
   },
   options: [{
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
     name: {
       type: String,
       required: true

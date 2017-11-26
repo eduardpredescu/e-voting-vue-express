@@ -115,9 +115,17 @@ app.get('/events/:id', authenticate, (req, res) => {
   }).then((eventItem) => {
     if (!eventItem) return res.status(404).send()
 
-    res.send({
-      eventItem
-    })
+    if (!req.user.is_admin) {
+      Voter.findOne({
+        _user: req.user._id
+      }).then((voter) => {
+        if (!voter) return res.status(404).send()
+        eventItem.options = eventItem.options.filter((item) => item.county === voter.county)
+        res.send({
+          eventItem
+        })
+      }).catch((e) => res.status(400).send(e))
+    } else res.send({eventItem})
   }).catch((e) => res.status(400).send(e))
 })
 
@@ -152,6 +160,63 @@ app.delete('/events/:id', authenticate, (req, res) => {
     res.send({
       eventItem
     })
+  }).catch((e) => res.status(400).send(e))
+})
+
+app.get('/voters/events', authenticate, (req, res) => {
+  if(req.user.is_admin) return res.status(401).send()
+
+  Voter.findOne({
+    _user: req.user._id
+  }).then((voter) => {
+    if(!voter) return res.status(400).send(e)
+
+    Event.find({
+      _id: {
+        $in: voter.events.map(item => item._event.toHexString())
+      }
+    }).then((eventItems) => {
+      eventItems.forEach((eventItem) => {
+        eventItem.options = eventItem.options.filter(option => voter.events.map(voterOption => voterOption._option.toHexString()).indexOf(option._id.toHexString()) > -1)
+      })
+      res.send(eventItems)
+    }).catch((e) => res.status(404).send(e))
+  }).catch((e) => res.status(400).send(e))
+})
+
+app.patch('/voters/events/:id', authenticate, (req, res) => {
+  if(req.user.is_admin) return res.status(401).send()
+
+  Voter.findOneAndUpdate({
+    _user: req.user._id,
+    'events._event': req.params.id
+  }, {
+    $set: {
+      'events.$._option': req.body._option
+    }
+  },{
+    new: true
+  }).then((voter) => {
+    if(!voter) return res.status(404).send()
+    res.send({voter})
+  }).catch((e) => res.status(400).send(e))
+})
+
+app.post('/voters/events', authenticate, (req, res) => {
+  if(req.user.is_admin) return res.status(401).send()
+
+  Voter.findOneAndUpdate({
+    _user: req.user._id
+  }, {
+    $push: {
+      events: req.body
+    }
+  }, {
+    new: true
+  }).then((voter) => {
+    if(!voter) return res.status(404).send()
+
+    res.send({voter})
   }).catch((e) => res.status(400).send(e))
 })
 

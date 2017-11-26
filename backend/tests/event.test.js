@@ -7,8 +7,10 @@ const {Event} = require('./../models/event')
 
 const {events, populateEvents} = require('./seed/eventSeed')
 const {users, populateUsers} = require('./seed/userSeed')
+const {populateVoters} = require('./seed/voterSeed')
 
 beforeEach(populateUsers)
+beforeEach(populateVoters)
 beforeEach(populateEvents)
 
 describe('GET /events', () => {
@@ -76,12 +78,12 @@ describe('GET /events/:id', () => {
   it('should return an event', (done) => {
     request(app)
       .get(`/events/${events[0]._id.toHexString()}/`)
-      .set('x-auth', users[0].tokens[0].token)
+      .set('x-auth', users[1].tokens[0].token)
       .expect(200)
       .expect((res) => {
         expect(res.body.eventItem.name).toBe(events[0].name)
         expect(res.body.eventItem.due_date).toBe(events[0].due_date)
-        expect(res.body.eventItem.options.length).toBe(events[0].options.length)
+        expect(res.body.eventItem.options.length).toBe(2)
       })
       .end(done)
   })
