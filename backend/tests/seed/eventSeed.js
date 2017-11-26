@@ -8,11 +8,23 @@ const eventTwoId = ObjectID()
 const events = [{
   _id: eventOneId,
   name: "Event one",
-  due_date: 1605780520000
+  due_date: 1605780520000,
+  options: [{
+    name: 'option 1',
+    county: 'DB'
+  }, {
+    name: 'option 2',
+    county: 'DB'
+  }]
 }, {
   _id: eventTwoId,
   name: "Event two",
-  due_date: 1447927720000
+  due_date: 1447927720000,
+  options: [{
+    name: 'option 1'
+  }, {
+    name: 'option 2'
+  }]
 }]
 
 const populateEvents = (done) => {
