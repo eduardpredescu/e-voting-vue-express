@@ -28,7 +28,7 @@ const port = process.env.PORT
 app.use(bodyParser.json())
 app.use(cors())
 
-app.post('/voters', (req, res) => {
+app.post('/api/voters', (req, res) => {
   let body = _.pick(req.body, ['pnc', 'name', 'surname', 'dob', 'doe', 'city', 'county', 'telephone', 'email'])
   let userBody = _.pick(req.body, ['username', 'password'])
   let user = new User(userBody)
@@ -55,7 +55,7 @@ app.post('/voters', (req, res) => {
   })
 })
 
-app.post('/voters/login', (req, res) => {
+app.post('/api/voters/login', (req, res) => {
   let body = _.pick(req.body, ['username', 'password'])
 
   User.findByCredentials(body.username, body.password).then((user) => {
@@ -67,7 +67,7 @@ app.post('/voters/login', (req, res) => {
   })
 })
 
-app.get('/voters/me', authenticate, (req, res) => {
+app.get('/api/voters/me', authenticate, (req, res) => {
   Voter.findOne({
     _user: req.user._id
   }).then((voter) => {
@@ -78,7 +78,7 @@ app.get('/voters/me', authenticate, (req, res) => {
 
 })
 
-app.delete('/voters/me/token', authenticate, (req, res) => {
+app.delete('/api/voters/me/token', authenticate, (req, res) => {
   req.user.removeToken(req.token).then(() => {
     res.status(200).send()
   }, () => {
@@ -86,7 +86,7 @@ app.delete('/voters/me/token', authenticate, (req, res) => {
   })
 })
 
-app.get('/events', authenticate, (req, res) => {
+app.get('/api/events', authenticate, (req, res) => {
   Event.find().then((events) => {
     res.send({
       events
@@ -96,7 +96,7 @@ app.get('/events', authenticate, (req, res) => {
   })
 })
 
-app.post('/events', authenticate, (req, res) => {
+app.post('/api/events', authenticate, (req, res) => {
   if (!req.user.is_admin) return res.status(401).send()
   let eventBody = new Event(req.body)
 
@@ -107,7 +107,7 @@ app.post('/events', authenticate, (req, res) => {
   })
 })
 
-app.get('/events/:id', authenticate, (req, res) => {
+app.get('/api/events/:id', authenticate, (req, res) => {
   if (!ObjectID.isValid(req.params.id)) return res.status(404).send()
 
   Event.findOne({
@@ -129,7 +129,7 @@ app.get('/events/:id', authenticate, (req, res) => {
   }).catch((e) => res.status(400).send(e))
 })
 
-app.patch('/events/:id', authenticate, (req, res) => {
+app.patch('/api/events/:id', authenticate, (req, res) => {
   if (!ObjectID.isValid(req.params.id)) return res.status(404).send()
   if (!req.user.is_admin) return res.status(401).send()
 
@@ -148,7 +148,7 @@ app.patch('/events/:id', authenticate, (req, res) => {
   }).catch((e) => res.status(400).send(e))
 })
 
-app.delete('/events/:id', authenticate, (req, res) => {
+app.delete('/api/events/:id', authenticate, (req, res) => {
   if (!ObjectID.isValid(req.params.id)) return res.status(404).send()
   if (!req.user.is_admin) return res.status(401).send()
 
@@ -163,7 +163,7 @@ app.delete('/events/:id', authenticate, (req, res) => {
   }).catch((e) => res.status(400).send(e))
 })
 
-app.get('/voters/events', authenticate, (req, res) => {
+app.get('/api/voters/events', authenticate, (req, res) => {
   if(req.user.is_admin) return res.status(401).send()
 
   Voter.findOne({
@@ -184,7 +184,7 @@ app.get('/voters/events', authenticate, (req, res) => {
   }).catch((e) => res.status(400).send(e))
 })
 
-app.patch('/voters/events/:id', authenticate, (req, res) => {
+app.patch('/api/voters/events/:id', authenticate, (req, res) => {
   if(req.user.is_admin) return res.status(401).send()
 
   Voter.findOneAndUpdate({
@@ -202,7 +202,7 @@ app.patch('/voters/events/:id', authenticate, (req, res) => {
   }).catch((e) => res.status(400).send(e))
 })
 
-app.post('/voters/events', authenticate, (req, res) => {
+app.post('/api/voters/events', authenticate, (req, res) => {
   if(req.user.is_admin) return res.status(401).send()
 
   Voter.findOneAndUpdate({

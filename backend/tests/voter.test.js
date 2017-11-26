@@ -32,7 +32,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-      .post('/voters')
+      .post('/api/voters')
       .send(voter)
       .expect(200)
       .expect((res) => {
@@ -68,7 +68,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-      .post('/voters')
+      .post('/api/voters')
       .send(voter)
       .expect(400)
       .end(done)
@@ -89,7 +89,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-    .post('/voters')
+    .post('/api/voters')
     .send(voter)
     .expect(400)
     .end(done)
@@ -110,7 +110,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-    .post('/voters')
+    .post('/api/voters')
     .send(voter)
     .expect(400)
     .end(done)
@@ -132,7 +132,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-    .post('/voters')
+    .post('/api/voters')
     .send(voter)
     .expect(400)
     .end(done)
@@ -154,7 +154,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-    .post('/voters')
+    .post('/api/voters')
     .send(voter)
     .expect(400)
     .end(done)
@@ -176,7 +176,7 @@ describe('POST /voters', () => {
     }
 
     request(app)
-    .post('/voters')
+    .post('/api/voters')
     .send(voter)
     .expect(400)
     .end(done)
@@ -186,7 +186,7 @@ describe('POST /voters', () => {
 describe('POST /voters/login', () => {
   it('should authenticate an user', (done) => {
     request(app)
-      .post('/voters/login')
+      .post('/api/voters/login')
       .send({
         username: users[1].username,
         password: users[1].password
@@ -210,7 +210,7 @@ describe('POST /voters/login', () => {
 
   it('should reject an invalid user', (done) => {
     request(app)
-    .post('/voters/login')
+    .post('/api/voters/login')
     .send({
       username: users[1].username,
       password: users[1].password + '1'
@@ -223,7 +223,7 @@ describe('POST /voters/login', () => {
 describe('GET /voters/me', () => {
   it('should return voter if authenticated', (done) => {
     request(app)
-      .get('/voters/me')
+      .get('/api/voters/me')
       .set('x-auth', users[1].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -235,7 +235,7 @@ describe('GET /voters/me', () => {
 
   it('should return 401 if not authenticated', (done) => {
     request(app)
-      .get('/voters/me')
+      .get('/api/voters/me')
       .expect(401)
       .expect((res) => {
         expect(res.body).toEqual({})
@@ -247,7 +247,7 @@ describe('GET /voters/me', () => {
 describe('DELETE /voters/me/token', () => {
   it('should remove auth token on logout', (done) => {
     request(app)
-      .delete('/voters/me/token')
+      .delete('/api/voters/me/token')
       .set('x-auth', users[0].tokens[0].token)
       .expect(200)
       .end((err, res) => {
@@ -264,7 +264,7 @@ describe('DELETE /voters/me/token', () => {
 describe('GET /voters/events', () => {
   it('should return the events on which the voter expressed his option', (done) => {
     request(app)
-      .get('/voters/events')
+      .get('/api/voters/events')
       .set('x-auth', users[1].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -276,7 +276,7 @@ describe('GET /voters/events', () => {
 
   it('should deny an admin from accessing', (done) => {
     request(app)
-    .get('/voters/events')
+    .get('/api/voters/events')
     .set('x-auth', users[0].tokens[0].token)
     .expect(401)
     .end(done)
@@ -286,7 +286,7 @@ describe('GET /voters/events', () => {
 describe('PATCH /voters/events/:id', () => {
   it('should update an option for a voter', (done) => {
     request(app)
-      .patch(`/voters/events/${voters[1].events[0]._event.toHexString()}`)
+      .patch(`/api/voters/events/${voters[1].events[0]._event.toHexString()}`)
       .set('x-auth', users[1].tokens[0].token)
       .send({_option: events[0].options[1]._id.toHexString()})
       .expect(200)
@@ -305,7 +305,7 @@ describe('PATCH /voters/events/:id', () => {
 
   it('should return 404 if event does not exist', (done) => {
     request(app)
-    .patch(`/voters/events/${new ObjectID().toHexString()}`)
+    .patch(`/api/voters/events/${new ObjectID().toHexString()}`)
     .set('x-auth', users[1].tokens[0].token)
     .send({_option: events[0].options[1]._id.toHexString()})
     .expect(404)
@@ -314,7 +314,7 @@ describe('PATCH /voters/events/:id', () => {
 
   it('should return 400 for non object IDs', (done) => {
     request(app)
-    .patch('/voters/events/123')
+    .patch('/api/voters/events/123')
     .set('x-auth', users[1].tokens[0].token)
     .send({_option: events[0].options[1]._id.toHexString()})
     .expect(400)
@@ -325,7 +325,7 @@ describe('PATCH /voters/events/:id', () => {
 describe('POST /voters/events', () => {
   it('should return the voter with an updated event array', (done) => {
     request(app)
-      .post('/voters/events')
+      .post('/api/voters/events')
       .set('x-auth', users[1].tokens[0].token)
       .send({_event: events[1]._id.toHexString(), _option: events[1].options[0]._id.toHexString()})
       .expect(200)

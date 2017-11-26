@@ -16,7 +16,7 @@ beforeEach(populateEvents)
 describe('GET /events', () => {
   it('should get all events', (done) => {
     request(app)
-    .get('/events')
+    .get('/api/events')
     .set('x-auth', users[0].tokens[0].token)
     .expect(200)
     .expect((res) => {
@@ -33,7 +33,7 @@ describe('POST /events', () => {
       due_date: 1511382048
     }
     request(app)
-      .post('/events')
+      .post('/api/events')
       .set('x-auth', users[0].tokens[0].token)
       .send(testEvent)
       .expect(200)
@@ -55,7 +55,7 @@ describe('POST /events', () => {
 
   it('should reject an user that is not an admin', (done) => {
     request(app)
-      .post('/events')
+      .post('/api/events')
       .set('x-auth', users[1].tokens[0].token)
       .send(events[0])
       .expect(401)
@@ -64,7 +64,7 @@ describe('POST /events', () => {
 
   it('should reject an invalid event', (done) => {
     request(app)
-      .post('/events')
+      .post('/api/events')
       .set('x-auth', users[0].tokens[0].token)
       .send({
         name: 'ceva'
@@ -77,7 +77,7 @@ describe('POST /events', () => {
 describe('GET /events/:id', () => {
   it('should return an event', (done) => {
     request(app)
-      .get(`/events/${events[0]._id.toHexString()}/`)
+      .get(`/api/events/${events[0]._id.toHexString()}/`)
       .set('x-auth', users[1].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -90,7 +90,7 @@ describe('GET /events/:id', () => {
 
   it('should return 404 if not found', (done) => {
     request(app)
-    .get(`/events/${new ObjectID().toHexString()}/`)
+    .get(`/api/events/${new ObjectID().toHexString()}/`)
     .set('x-auth', users[0].tokens[0].token)
     .expect(404)
     .end(done)
@@ -98,7 +98,7 @@ describe('GET /events/:id', () => {
 
   it('should return 404 for non Object IDs', (done) => {
     request(app)
-    .get('/events/123')
+    .get('/api/events/123')
     .set('x-auth', users[0].tokens[0].token)
     .expect(404)
     .end(done)
@@ -117,7 +117,7 @@ describe('PATCH /events/:id', () => {
 
   it('should update an event', (done) => {
     request(app)
-      .patch(`/events/${events[0]._id.toHexString()}`)
+      .patch(`/api/events/${events[0]._id.toHexString()}`)
       .set('x-auth', users[0].tokens[0].token)
       .send(newEvent)
       .expect(200)
@@ -130,7 +130,7 @@ describe('PATCH /events/:id', () => {
 
   it('should deny patch to a non admin', (done) => {
     request(app)
-    .patch(`/events/${events[0]._id.toHexString()}`)
+    .patch(`/api/events/${events[0]._id.toHexString()}`)
     .set('x-auth', users[1].tokens[0].token)
     .send(newEvent)
     .expect(401)
@@ -141,7 +141,7 @@ describe('PATCH /events/:id', () => {
 describe('DELETE /events/:id', () => {
   it('should delete and return an event', (done) => {
     request(app)
-      .delete(`/events/${events[0]._id.toHexString()}`)
+      .delete(`/api/events/${events[0]._id.toHexString()}`)
       .set('x-auth', users[0].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -159,7 +159,7 @@ describe('DELETE /events/:id', () => {
 
   it('should deny access for a non admin', (done) => {
     request(app)
-    .delete(`/events/${events[0]._id.toHexString()}`)
+    .delete(`/api/events/${events[0]._id.toHexString()}`)
     .set('x-auth', users[1].tokens[0].token)
     .expect(401)
     .end(done)
@@ -167,7 +167,7 @@ describe('DELETE /events/:id', () => {
 
   it('should return 404 for a non existent event', (done) => {
     request(app)
-    .delete(`/events/${new ObjectID().toHexString()}`)
+    .delete(`/api/events/${new ObjectID().toHexString()}`)
     .set('x-auth', users[0].tokens[0].token)
     .expect(404)
     .end(done)
@@ -175,7 +175,7 @@ describe('DELETE /events/:id', () => {
 
   it('should return 404 for a non-object ID', (done) => {
     request(app)
-    .delete('/events/123')
+    .delete('/api/events/123')
     .set('x-auth', users[0].tokens[0].token)
     .expect(404)
     .end(done)
