@@ -1,0 +1,6 @@
+export const LOG_IN = 'LOG_IN'
+export const REGISTER = 'REGISTER'
+export const GET_EVENTS = 'GET_EVENTS'
+export const POST_VOTE = 'POST_VOTE'
+export const GET_VOTER = 'GET_VOTER'
+export const UPDATE_VOTER = 'UPDATE_VOTER'

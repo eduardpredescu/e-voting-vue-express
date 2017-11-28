@@ -29,8 +29,8 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.post('/api/voters', (req, res) => {
-  let body = _.pick(req.body, ['pnc', 'name', 'surname', 'dob', 'doe', 'city', 'county', 'telephone', 'email'])
-  let userBody = _.pick(req.body, ['username', 'password'])
+  let body = req.body.voter
+  let userBody = req.body.user
   let user = new User(userBody)
   let voter = new Voter(_.merge(body, {
     _user: user._id

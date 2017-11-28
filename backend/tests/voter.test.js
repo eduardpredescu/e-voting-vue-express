@@ -26,14 +26,16 @@ describe('POST /voters', () => {
       'city': 'Craiova',
       'county': 'DJ',
       'telephone': '0764323213',
-      'email': 'anghel@ceva.com',
+      'email': 'anghel@ceva.com'
+    }
+    let user = {
       'username': 'anghel123',
       'password': '1234567'
     }
 
     request(app)
       .post('/api/voters')
-      .send(voter)
+      .send({voter,user})
       .expect(200)
       .expect((res) => {
         expect(res.headers['x-auth']).toBeTruthy()
@@ -63,13 +65,16 @@ describe('POST /voters', () => {
       'city': 'Craiova',
       'county': 'DJ',
       'telephone': '0764323213',
-      'email': 'anghel@ceva.com',
+      'email': 'anghel@ceva.com'
+    }
+    let user = {
+      'username': 'anghel123',
       'password': '123'
     }
 
     request(app)
       .post('/api/voters')
-      .send(voter)
+      .send({voter, user})
       .expect(400)
       .end(done)
   })
@@ -84,13 +89,16 @@ describe('POST /voters', () => {
       'city': 'Craiova',
       'county': 'DJ',
       'telephone': '0764323213',
-      'email': 'anghel@ceva.com',
-      'password': '123456'
+      'email': 'anghel@ceva.com'
+    }
+    let user = {
+      'username': 'anghel123',
+      'password': '1234567'
     }
 
     request(app)
     .post('/api/voters')
-    .send(voter)
+    .send({voter, user})
     .expect(400)
     .end(done)
   })
@@ -106,12 +114,15 @@ describe('POST /voters', () => {
       'county': 'DJ',
       'telephone': '0764323213',
       'email': 'anghel@ceva.com',
-      'password': '123456'
+    }
+    let user = {
+      'username': 'anghel123',
+      'password': '1234567'
     }
 
     request(app)
     .post('/api/voters')
-    .send(voter)
+    .send({voter, user})
     .expect(400)
     .end(done)
   })
@@ -127,13 +138,16 @@ describe('POST /voters', () => {
       'county': 'DJ',
       'telephone': '0764323213',
       'email': 'ionel@gmail.com',
-      'username': 'ceva',
+      'username': 'ceva'
+    }
+    let user = {
+      'username': 'anghel123',
       'password': '1234567'
     }
 
     request(app)
     .post('/api/voters')
-    .send(voter)
+    .send({voter, user})
     .expect(400)
     .end(done)
   })
@@ -148,14 +162,16 @@ describe('POST /voters', () => {
       'city': 'Craiova',
       'county': 'DJ',
       'telephone': '0764323213',
-      'email': 'anghel@ceva.com',
-      'username': 'ceva',
+      'email': 'anghel@ceva.com'
+    }
+    let user = {
+      'username': 'anghel123',
       'password': '1234567'
     }
 
     request(app)
     .post('/api/voters')
-    .send(voter)
+    .send({voter, user})
     .expect(400)
     .end(done)
   })
@@ -170,14 +186,16 @@ describe('POST /voters', () => {
       'city': 'Craiova',
       'county': 'DJ',
       'telephone': '0764323213',
-      'email': 'anghel@ceva.com',
+      'email': 'anghel@ceva.com'
+    }
+    let user = {
       'username': 'userOne',
       'password': '1234567'
     }
 
     request(app)
     .post('/api/voters')
-    .send(voter)
+    .send({voter, user})
     .expect(400)
     .end(done)
   })
