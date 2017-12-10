@@ -4,8 +4,17 @@ import { mutations } from './mutations'
 import * as actions from './actions'
 import * as getters from './getters'
 
-export const state = {
+Vue.use(Vuex)
+
+const state = {
   user: {},
   voter: {},
   events: []
 }
+
+export default new Vuex.Store({
+  state,
+  mutations,
+  actions,
+  getters
+})

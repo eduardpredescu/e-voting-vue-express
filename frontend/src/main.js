@@ -4,6 +4,7 @@ import Vue from 'vue'
 import Buefy from 'buefy'
 import App from './App'
 import router from './router'
+import store from './store'
 import 'buefy/lib/buefy.css'
 
 Vue.use(Buefy, {
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })
