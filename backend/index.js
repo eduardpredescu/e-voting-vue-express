@@ -26,7 +26,9 @@ const app = express()
 const port = process.env.PORT
 
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors({
+  exposedHeaders: ['x-auth']
+}))
 
 app.post('/api/voters', (req, res) => {
   let body = req.body.voter
