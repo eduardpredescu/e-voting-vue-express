@@ -1,0 +1,12 @@
+{
+  "development": {
+    "MONGODB_URI":"mongodb://127.0.0.1:27017/VotesApp",
+    "PORT": 3000,
+    "JWT_SECRET": "SECRET_KEY"
+  },
+  "test": {
+    "MONGODB_URI":"mongodb://127.0.0.1:27017/VotesAppTest",
+    "PORT": 3000,
+    "JWT_SECRET": "SECRET_KEY"
+  }
+}
