@@ -1,19 +1,26 @@
 <template>
-  <div class="card">
-    <div class="card-content">
-    <b-field>
-      <b-input label="Username" type="text" v-model="username" placeholder="username"></b-input>
-    </b-field>
-    <b-field>
-      <b-input type="text" v-model="password" placeholder="password"></b-input>
-    </b-field>
-    <button class="button" @click="Login({username, password})">Login</button>
-    <router-link :to="{name: 'Register'}">Register to use the system</router-link>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-content">
+        <h5 class="title is-center">E-voting system</h5>
+        <b-field label="Username">
+          <b-input type="text" v-model="username" placeholder="username"></b-input>
+        </b-field>
+        <b-field label="Password">
+          <b-input type="text" v-model="password" placeholder="password"></b-input>
+        </b-field>
+      </div>
+      <div class="card-footer">
+        <a class="card-footer-item is-success" @click="Login({username, password})">Login</a>
+        <router-link class="card-footer-item" :to="{name: 'Register'}">Register</router-link>
+      </div>
     </div>
   </div>
 </template>
+
+
+
 <script>
-  import { mapGetters } from 'vuex'
   export default {
     data () {
       return {
@@ -21,7 +28,6 @@
         password: ''
       }
     },
-    computed: mapGetters(['user']),
     methods: {
       Login (credentials) {
         this.$store.dispatch('Login', credentials)
@@ -30,3 +36,22 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.container-fluid {
+  height: 100vh;
+  background-color: hsl(204, 86%, 53%);
+}
+.card-footer-item {
+  &.is-success {
+    background-color: hsl(141, 71%, 48%);
+    color: #fff;
+  }
+}
+</style>

@@ -18,9 +18,7 @@
       </nav>
     </header>
     <main>
-      <div class="container">
-        <router-view></router-view>
-      </div>
+      <router-view></router-view>
     </main>
   </div>
 </template>
@@ -31,7 +29,8 @@
   }
 </script>
 
-<style>
-
-
+<style lang="scss" scoped>
+#app {
+  height: 100vh;
+}
 </style>
