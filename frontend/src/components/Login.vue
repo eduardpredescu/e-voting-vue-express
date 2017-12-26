@@ -1,12 +1,19 @@
 <template>
-  <div>
-    <input type="text" v-model="username" placeholder="username">
-    <input type="text" v-model="password" placeholder="password">
-    <button @click="Login({username, password})">Login</button>
+  <div class="card">
+    <div class="card-content">
+    <b-field>
+      <b-input label="Username" type="text" v-model="username" placeholder="username"></b-input>
+    </b-field>
+    <b-field>
+      <b-input type="text" v-model="password" placeholder="password"></b-input>
+    </b-field>
+    <button class="button" @click="Login({username, password})">Login</button>
+    <router-link :to="{name: 'Register'}">Register to use the system</router-link>
+    </div>
   </div>
 </template>
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   export default {
     data () {
       return {
@@ -15,6 +22,11 @@
       }
     },
     computed: mapGetters(['user']),
-    methods: mapActions(['Login'])
+    methods: {
+      Login (credentials) {
+        this.$store.dispatch('Login', credentials)
+        this.$router.push({path: '/'})
+      }
+    }
   }
 </script>

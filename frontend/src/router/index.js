@@ -10,7 +10,10 @@ export default new Router({
     {
       path: '/',
       name: 'Hello',
-      component: Hello
+      component: Hello,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/login',

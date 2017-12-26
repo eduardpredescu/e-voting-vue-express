@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="$route.path !== '/login' && $route.path !== '/register'">
       <nav class="navbar is-info" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <!-- navbar items, navbar burger... -->
@@ -18,8 +18,9 @@
       </nav>
     </header>
     <main>
-      <img src="./assets/logo.png" alt="Vue.js PWA">
-      <router-view></router-view>
+      <div class="container">
+        <router-view></router-view>
+      </div>
     </main>
   </div>
 </template>
